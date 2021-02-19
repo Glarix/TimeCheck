@@ -9,6 +9,7 @@
 #else
 #include <unistd.h>
 #endif
+#define clrscr() printf("\e[1;1H\e[2J")
 
 //Function to print the score board
 void score(double score, char* name){
@@ -26,9 +27,49 @@ void score(double score, char* name){
 	printf("_____________________________________________________________________\n");
 }
 
+float float_rand(){//function to generate a random time period for sleep
+	float min = 1, max = 5;
+    float scale = rand() / (float) RAND_MAX; /* [0, 1.0] */
+    return min + scale * ( max - min );      /* [min, max] */
+}
+
+float timeCalculation(){//main function, calculates time taken to press
+
+	struct timeval stop, start;
+	printf("PRESS ENTER\n");
+	gettimeofday(&start, NULL);
+	//do stuff
+	getchar();
+	gettimeofday(&stop, NULL);
+
+	return (double)((stop.tv_sec - start.tv_sec) * 1000000 + stop.tv_usec - start.tv_usec) / 1000000;//returning time taken to press enter
+}
+
+int checkRecord(float* acc, double* recordTime, char player[256], char nameShow[256]){//Checking if new record and calling display function
+	
+	if (*acc > *recordTime){//Checking if the attempt was slower
+			*acc = *recordTime;
+		}else {// if faster, rewrite the scores.txt file with the new record
+			*recordTime = *acc;
+			strcpy(nameShow, player);
+			FILE *rewrite = fopen("scores.txt", "w");
+			if (rewrite==0){
+     		   return 1;
+    		}
+    		fprintf(rewrite, "%s\n",nameShow );
+    		fprintf(rewrite, "%f\n",*recordTime );
+    		fclose(rewrite);
+		}
+
+
+	score(*acc, nameShow);//display the current record
+	return 0;
+}
+
 
 int main(){
 
+	char nameShow[256];//Name to be shown as record holder
 	//opening and reading file with scores   [START]
 	FILE *fptr= fopen("scores.txt", "r");
 	char recordName[5000];
@@ -41,36 +82,57 @@ int main(){
 	recordName[strlen(recordName) - 1] = '\0';
 	fgets(timeScore, 5000, fptr);
 	double recordTime = atof(timeScore);
+	strcpy(nameShow, recordName);//Setting the record holder name to be shown if record not bitten
 	//opening and reading file with scores [END]
 
-	//getting current player's name [START]
+	/*//getting current player's name [START]
+
+	//[END]*/
+
+	printf("Hello, how many times would you like to try?\n");
+	int i;
+	scanf("%d", &i);//Getting the number of tests to be loaded
+
+	printf("How to call you?\n");
 	char player[256];
 	fgets(player, 257, stdin);
+	fgets(player, 257, stdin);//Getting the name of current user
 	player[strlen(player) - 1] = '\0';
-	//[END]
+	printf("Ok, let's go\n");
 
-	//Actual time calculation [START]
-    struct timeval stop, start;
-	gettimeofday(&start, NULL);
-	//do stuff
-	getchar();
-	gettimeofday(&stop, NULL);
 
-	double acc = (double)((stop.tv_sec - start.tv_sec) * 1000000 + stop.tv_usec - start.tv_usec) / 1000000;
-	printf("%f seconds\n", acc);
-	//Actual time calculation [END]
+	while(i){
+		float timer = float_rand();//generating a random amount of time between 1 and 5 seconds
+		printf("WAITNG...\n");
+		sleep(timer);// waiting for the time to pass
+		clrscr();
 
-	//Checking if new record and calling display function [START]
-	if (acc > recordTime){
-		acc = recordTime;
-		strcpy(player, recordName);
+		float acc = timeCalculation();//running the speed test
+		checkRecord(&acc, &recordTime, player, nameShow);//Checking if new record and calling display function
+
+		//Checking if new record and calling display function [START]  {if above function (checkRecord) is not working, this for sure works}
+		/*if (acc > recordTime){
+			acc = recordTime;
+		}else {
+			recordTime = acc;
+			strcpy(nameShow, player);
+			FILE *rewrite = fopen("scores.txt", "w");
+			if (rewrite==0){
+     		   return 1;
+    		}
+    		fprintf(rewrite, "%s\n",nameShow );
+    		fprintf(rewrite, "%f\n",recordTime );
+    		fclose(rewrite);
+		}
+
+
+		score(acc, nameShow);*/
+		//Checking if new record and calling display function [END]
+		i--;
+
 	}
 
-	score(acc, player);
-	//Checking if new record and calling display function [END]
-
-
-
+	fclose(fptr);
 
 	return 0;
 }

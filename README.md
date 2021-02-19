@@ -1,8 +1,26 @@
 # TimeCheck
 
 
-1. Taking current user Name
-2. Reading name and score of record holder from file 
-3. Calculating new time 
-4. Checking if record bitten and calling display function
+A small beginner project.
+
+
+V1.0(no real testing, a lot of bugs might be easily found)
+
+
+This program reads the content of scores.txt file to get the current record.
+
+The purpose is to test the users reaction time.
+
+User is asked to type the number of tests he wants to run and the nickname
+that he wants to be stored in scores.txt if record is bitten.
+
+For each test, the user has to wait a random amount of time (between 1 and
+5 seconds) and press Enter as fast as he can after that period.
+
+The time taken for the user to press Enter is compared with current record
+and if faster, the record is replaced. After every round, the current record
+is displayed on the screen.
+
+NOTES:
+* The scores.txt file MUST be in the same directory as the source file 
 
