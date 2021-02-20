@@ -21,6 +21,15 @@ The time taken for the user to press Enter is compared with current record
 and if faster, the record is replaced. After every round, the current record
 is displayed on the screen.
 
+
+V1.01(no real testing, a lot of bugs might be easily found)
+
+Now you can see your score after each test.
+Nothing else added.
+
 NOTES:
-* The scores.txt file MUST be in the same directory as the source file 
+* The scores.txt file MUST be in the same directory as the source file
+
+IDEAS TO IMPLEMENT
+*Maybe a way to show all the results at the end of every test 
 
