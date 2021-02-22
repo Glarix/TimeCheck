@@ -31,5 +31,5 @@ NOTES:
 * The scores.txt file MUST be in the same directory as the source file
 
 IDEAS TO IMPLEMENT
-*Maybe a way to show all the results at the end of every test 
+*Maybe a way to show all the results at the end of every test- **Done** 
 
